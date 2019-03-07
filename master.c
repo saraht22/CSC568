@@ -28,41 +28,10 @@
 #include <sys/xattr.h>
 #endif
 
-/* Encrypt the files
-*/
-static int worm_encryption(const char *path, struct key, 
 
 
-/* Deduplication
-*/
-static int master_comparesize()
-{
-}
-
-static int master_comparehash()
-{
-}
-
-
-static int master_encryption()
-{
-}
-
-static int master_permission()
-{
-}
-
-static int master_addattri()
-{
-}
-
-static int master_addfile()
-{
-}
-
-
-
-
+char* root_path;
+char* password;
 
 /*
  * List the supported extended attributes.
@@ -98,13 +67,10 @@ static int worm_getxattr(const char *path, const char *name, char *value, size_t
     }
     return res;
 }
-			   
-			   
-char* root_path;
-char* password;
 
-/* is_encrypted: returns 1 if encryption succeeded, 0 otherwise */
-int is_encrypted(const char *path)
+/* Encrypt the files
+*/
+static int worm_encryption(const char *path, struct key)
 {
 	int ret;
 	char xattr_val[5];
@@ -115,7 +81,6 @@ int is_encrypted(const char *path)
 	return ret;
 }
 
-/* add_encrypted_attr: returns 1 on success, 0 on failure */
 int add_encrypted_attr(const char *path)
 {
 	int ret;
@@ -126,6 +91,21 @@ int add_encrypted_attr(const char *path)
 	return ret;
 }
 
+
+/* Deduplication
+*/
+static int master_comparesize(const int *filesize)
+{
+	tmp = filesize
+	if(filesize == tmp) {
+        return 1;
+    } 
+}
+
+static int master_comparehash()
+{
+}
+			   
 char *prefix_path(const char *path)
 {
 	size_t len = strlen(path) + strlen(root_path) + 1;
@@ -150,7 +130,7 @@ static int xmp_getattr(const char *fuse_path, struct stat *stbuf)
 	return 0;
 }
 
-static int xmp_access(const char *fuse_path, int mask)
+static int access(const char *fuse_path, int mask)
 {
 	char *path = prefix_path(fuse_path);
 
@@ -163,7 +143,7 @@ static int xmp_access(const char *fuse_path, int mask)
 	return 0;
 }
 
-static int xmp_readlink(const char *fuse_path, char *buf, size_t size)
+static int readlink(const char *fuse_path, char *buf, size_t size)
 {
 	char *path = prefix_path(fuse_path);
 
@@ -177,34 +157,18 @@ static int xmp_readlink(const char *fuse_path, char *buf, size_t size)
 	return 0;
 }
 
-static int xmp_readdir(const char *fuse_path, void *buf, fuse_fill_dir_t filler,
-		       off_t offset, struct fuse_file_info *fi)
+static int master_permission()
 {
-	char *path = prefix_path(fuse_path);
-
-	DIR *dp;
-	struct dirent *de;
-	fprintf(stderr, "Path: %s\n", path);
-
-	(void) offset;
-	(void) fi;
-
-	dp = opendir(path);
-	if (dp == NULL)
-		return -errno;
-
-	while ((de = readdir(dp)) != NULL) {
-		struct stat st;
-		memset(&st, 0, sizeof(st));
-		st.st_ino = de->d_ino;
-		st.st_mode = de->d_type << 12;
-		if (filler(buf, de->d_name, &st, 0))
-			break;
-	}
-
-	closedir(dp);
-	return 0;
 }
+
+static int master_addattri()
+{
+}
+
+static int master_addfile()
+{
+}
+
 
 
 

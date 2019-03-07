@@ -29,11 +29,11 @@ FUSE 3.4.1
 
 4. File Design:
 
-master.c: 
+(1) master.c:  
 Part of the operations before building the WORM file system, including deduplication, encryption and Access control. 
 Given a folder, first we scan all the files in the folder, saving their size. If two files are of the same size, then compare their hash value to see if they are duplicate files. If so, only save one of them. Then, take the password parameter from the user input to encrypt the whole system.
 
-worm.c:    
+(2) worm.c:    
 Inplementation of read-only control on the generated file system built by master.
 
 

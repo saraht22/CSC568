@@ -18,10 +18,8 @@ static const char* wormfsVersion = "2019.02.20";
 #include <fuse.h>
 
 
-// Global to store our read-write path
+// stall the read path of the system
 char *rw_path;
-
-// Translate an wormfs path into it's underlying filesystem path
 
 static char* translate_path(const char* path)
 {
@@ -162,8 +160,6 @@ static int worm_statfs(const char *path, struct statvfs *st_buf)
 }
 
 
-
-
 static int worm_access(const char *path, int mode)
 {
 	int res;
@@ -184,73 +180,69 @@ static int worm_access(const char *path, int mode)
   	return res;
 }
 
-
-
-
-
-
 static int worm_mknod(const char *path, mode_t mode, dev_t rdev)
 {
-  (void)path;
-  (void)mode;
-  (void)rdev;
-  return -EROFS;
+  	(void)path;
+  	(void)mode;
+  	(void)rdev;
+  	return -EROFS;
 }
 
 static int worm_mkdir(const char *path, mode_t mode)
 {
-  (void)path;
-  (void)mode;
-  return -EROFS;
+  	(void)path;
+  	(void)mode;
+  	return -EROFS;
 }
 
 static int worm_unlink(const char *path)
 {
-  (void)path;
-  return -EROFS;
+  	(void)path;
+  	return -EROFS;
 }
 
 static int worm_rmdir(const char *path)
 {
-  (void)path;
-  return -EROFS;
+  	(void)path;
+  	return -EROFS;
 }
 
 static int worm_symlink(const char *from, const char *to)
 {
-  (void)from;
-  (void)to;
-  return -EROFS;	
+  	(void)from;
+  	(void)to;
+  	return -EROFS;	
 }
 
 static int worm_rename(const char *from, const char *to)
 {
-  (void)from;
-  (void)to;
-  return -EROFS;
+  	(void)from;
+  	(void)to;
+  	return -EROFS;
 }
 
 static int worm_link(const char *from, const char *to)
 {
-  (void)from;
-  (void)to;
-  return -EROFS;
+  	(void)from;
+  	(void)to;
+  	return -EROFS;
 }
 
 static int worm_chmod(const char *path, mode_t mode)
 {
-  (void)path;
-  (void)mode;
-  return -EROFS;
+  	(void)path;
+  	(void)mode;
+  	return -EROFS;
     
 }
 
 static int worm_chown(const char *path, uid_t uid, gid_t gid)
 {
-  (void)path;
-  (void)uid;
-  (void)gid;
-  return -EROFS;
+	(void)path;
+  	(void)uid;
+  	(void)gid;
+  	return -EROFS;
+  
 }
 
 static int worm_truncate(const char *path, off_t size)
@@ -270,28 +262,28 @@ static int worm_utime(const char *path, struct utimbuf *buf)
 
 static int worm_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *finfo)
 {
-  (void)path;
-  (void)buf;
-  (void)size;
-  (void)offset;
-  (void)finfo;
-  return -EROFS;
+  	(void)path;
+  	(void)buf;
+  	(void)size;
+  	(void)offset;
+  	(void)finfo;
+  	return -EROFS;
 }
 
 
 static int worm_release(const char *path, struct fuse_file_info *finfo)
 {
-  (void) path;
-  (void) finfo;
-  return 0;
+  	(void) path;
+  	(void) finfo;
+  	return 0;
 }
 
 static int worm_fsync(const char *path, int crap, struct fuse_file_info *finfo)
 {
-  (void) path;
-  (void) crap;
-  (void) finfo;
-  return 0;
+  	(void) path;
+  	(void) crap;
+  	(void) finfo;
+  	return 0;
 }
 
 
@@ -315,32 +307,28 @@ static int worm_removexattr(const char *path, const char *name, const char *valu
 	return -EROFS;
 }
 
-
-
 struct fuse_operations worm_oper = {
     .getattr	= worm_getattr,
     .readlink	= worm_readlink,
     .readdir	= worm_readdir,
-    .mknod		= worm_mknod,
-    .mkdir		= worm_mkdir,
+    .mknod	= worm_mknod,
+    .mkdir	= worm_mkdir,
     .symlink	= worm_symlink,
-    .unlink		= worm_unlink,
-    .rmdir		= worm_rmdir,
-    .rename		= worm_rename,
-    .link		= worm_link,
-    .chmod		= worm_chmod,
-    .chown		= worm_chown,
+    .unlink	= worm_unlink,
+    .rmdir	= worm_rmdir,
+    .rename	= worm_rename,
+    .link	= worm_link,
+    .chmod	= worm_chmod,
+    .chown	= worm_chown,
     .truncate	= worm_truncate,
-    .utime		= worm_utime,
-    .open		= worm_open,
-    .read		= worm_read,
-    .write		= worm_write,
-    .statfs		= worm_statfs,
+    .utime	= worm_utime,
+    .open	= worm_open,
+    .read	= worm_read,
+    .write	= worm_write,
+    .statfs	= worm_statfs,
     .release	= worm_release,
-    .fsync		= worm_fsync,
-    .access		= worm_access,
-
-    /* Extended attributes support for userland interaction */
+    .fsync	= worm_fsync,
+    .access	= worm_access,
     .setxattr	= worm_setxattr,
     .removexattr= worm_removexattr
 };
@@ -355,7 +343,7 @@ static void usage(const char* progname)
     fprintf(stdout,
 "usage: %s readwritepath mountpoint [options]\n"
 "\n"
-"   Mounts readwritepath as a read-only mount at mountpoint\n"
+"Mounts readwritepath as a read-only mount at mountpoint\n"
 "\n"
 "general options:\n"
 "   -o opt,[opt...]     mount options\n"

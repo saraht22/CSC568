@@ -1,6 +1,4 @@
-#define FUSE_USE_VERSION 26
-
-static const char* wormfsVersion = "2019.02.20";
+#define FUSE_USE_VERSION 31
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -18,7 +16,7 @@ static const char* wormfsVersion = "2019.02.20";
 #include <fuse.h>
 
 
-// stall the read path of the system
+
 char *rw_path;
 
 static char* translate_path(const char* path)
@@ -166,9 +164,7 @@ static int worm_access(const char *path, int mode)
 	char *ipath;
   	ipath=translate_path(path);
   	
-  	/* Don't pretend that we allow writing
-  	 * Chris AtLee <chris@atlee.ca>
-  	 */
+  	
     if (mode & W_OK)
         return -EROFS;
         
@@ -348,7 +344,6 @@ static void usage(const char* progname)
 "general options:\n"
 "   -o opt,[opt...]     mount options\n"
 "   -h  --help          print help\n"
-"   -V  --version       print version\n"
 "\n", progname);
 }
 
@@ -411,13 +406,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "see `%s -h' for usage\n", argv[0]);
         exit(1);
     }
-
-    #if FUSE_VERSION >= 26
-        fuse_main(args.argc, args.argv, &worm_oper, NULL);
-    #else
-        fuse_main(args.argc, args.argv, &worm_oper);
-    #endif
-
     return 0;
 }
 

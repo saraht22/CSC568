@@ -277,7 +277,8 @@ int pindown_bprm_set_security(struct linux_binprm * bprm)
 	sec = (pindown_security_t *)kmalloc(sizeof(pindown_security_t), GFP_KERNEL);
 	
 	/* Set the pathname from the exec()'d binary filename */
-	if (!rc) {		// FILL IN
+	if (!rc) {
+		// FILL IN
       		if (bprm == NULL){
         		sec->bprm_pathname[0] = '\0';
         		sec->pathlen = 0;
